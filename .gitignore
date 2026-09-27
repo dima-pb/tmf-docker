@@ -1,0 +1,6 @@
+# secrets and local settings
+.env
+# runtime data (tracks, database, logs), the directories themselves are kept
+data/**
+!data/**/
+!data/**/.gitkeep

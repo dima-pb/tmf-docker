@@ -1,0 +1,116 @@
+# TrackMania Forever server with XAseco and pyseco. Settings: .env (copy from .env.example) and config/.
+name: tmf
+
+x-common: &common
+  user: "${UID}:${GID}"
+  restart: unless-stopped
+
+services:
+  tmserver:
+    <<: *common
+    build:
+      context: .
+      dockerfile: tmserver/Dockerfile
+      additional_contexts:
+        tmserver_src: ${TMSERVER_DIR}
+      args:
+        TMF_TIEBREAK_PATCH: ${TMF_TIEBREAK_PATCH:-1}
+    image: tmf-tmserver:local
+    environment:
+      TZ: ${TZ}
+      TMF_SERVER_NAME: ${TMF_SERVER_NAME}
+      TMF_SERVER_COMMENT: ${TMF_SERVER_COMMENT}
+      TMF_SERVER_LOGIN: ${TMF_SERVER_LOGIN}
+      TMF_SERVER_PASSWORD: ${TMF_SERVER_PASSWORD}
+      TMF_SERVER_VALIDATION_KEY: ${TMF_SERVER_VALIDATION_KEY}
+      TMF_PUBLIC_IP: ${TMF_PUBLIC_IP}
+      TMF_PORT: ${TMF_PORT}
+      TMF_P2P_PORT: ${TMF_P2P_PORT}
+      TMF_MATCHSETTINGS: ${TMF_MATCHSETTINGS}
+      TMF_SUPERADMIN_PASSWORD: ${TMF_SUPERADMIN_PASSWORD}
+      TMF_ADMIN_PASSWORD: ${TMF_ADMIN_PASSWORD}
+      TMF_USER_PASSWORD: ${TMF_USER_PASSWORD}
+    # only the game ports are published; XML-RPC (5000) stays inside the docker network
+    ports:
+      - "${TMF_PORT}:${TMF_PORT}/tcp"
+      - "${TMF_PORT}:${TMF_PORT}/udp"
+      - "${TMF_P2P_PORT}:${TMF_P2P_PORT}/tcp"
+      - "${TMF_P2P_PORT}:${TMF_P2P_PORT}/udp"
+    volumes:
+      - ./config/tmserver:/config:ro
+      - ./data/tmserver/config:/opt/tmserver/GameData/Config
+      - ./data/tmserver/tracks:/opt/tmserver/GameData/Tracks
+      - ./data/tmserver/logs:/opt/tmserver/Logs
+
+  mysql:
+    <<: *common
+    image: mariadb:11.4
+    environment:
+      TZ: ${TZ}
+      MARIADB_DATABASE: aseco
+      MARIADB_USER: aseco
+      MARIADB_PASSWORD: ${TMF_MYSQL_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${TMF_MYSQL_ROOT_PASSWORD}
+    # XAseco's PHP 5.6 client only knows the classic utf8 collations, and its queries predate strict mode
+    command: --character-set-server=utf8mb3 --collation-server=utf8mb3_general_ci --sql-mode=
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  xaseco:
+    <<: *common
+    build:
+      context: .
+      dockerfile: xaseco/Dockerfile
+      additional_contexts:
+        xaseco_src: ${XASECO_DIR}
+    image: tmf-xaseco:local
+    # PHP can't handle stop signals as the container's main process, a small init process passes them on
+    init: true
+    environment:
+      TZ: ${TZ}
+      TMF_MASTERADMIN_LOGIN: ${TMF_MASTERADMIN_LOGIN}
+      TMF_SUPERADMIN_PASSWORD: ${TMF_SUPERADMIN_PASSWORD}
+      TMF_MYSQL_PASSWORD: ${TMF_MYSQL_PASSWORD}
+      TMF_SERVER_LOGIN: ${TMF_SERVER_LOGIN}
+      TMF_SERVER_PASSWORD: ${TMF_SERVER_PASSWORD}
+      TMF_SERVER_NATION: ${TMF_SERVER_NATION}
+    volumes:
+      - ./config/xaseco:/config:ro
+      - ./data/xaseco/state:/data
+      - ./data/xaseco/logs:/opt/xaseco/logs
+      # XAseco writes into the server's track directory (TMX downloads, track lists) and gets its
+      # path from the server, so it must be mounted at exactly the same path as in tmserver
+      - ./data/tmserver/tracks:/opt/tmserver/GameData/Tracks
+    depends_on:
+      tmserver:
+        condition: service_started
+      mysql:
+        condition: service_healthy
+
+  pyseco:
+    <<: *common
+    build:
+      context: .
+      dockerfile: pyseco/Dockerfile
+      additional_contexts:
+        pyseco_src: ${PYSECO_DIR}
+    image: tmf-pyseco:local
+    environment:
+      TZ: ${TZ}
+      TMF_SUPERADMIN_PASSWORD: ${TMF_SUPERADMIN_PASSWORD}
+      TMF_ADMIN_PASSWORD: ${TMF_ADMIN_PASSWORD}
+      TMF_USER_PASSWORD: ${TMF_USER_PASSWORD}
+      TMF_DISCORD_TOKEN: ${TMF_DISCORD_TOKEN}
+      TMF_DISCORD_CHANNEL_ID: ${TMF_DISCORD_CHANNEL_ID}
+      TMF_DISCORD_INVITE: ${TMF_DISCORD_INVITE}
+      TMF_DISCORD_ADMINS: ${TMF_DISCORD_ADMINS}
+    volumes:
+      - ./config/pyseco:/config:ro
+      - ./data/pyseco/logs:/data/logs
+    depends_on:
+      - tmserver
