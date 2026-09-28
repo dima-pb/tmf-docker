@@ -5,6 +5,8 @@ RUN docker-php-ext-install mysql
 
 WORKDIR /opt/xaseco
 COPY --from=xaseco_src . .
+# third-party plugins (see xaseco/addons/README.md)
+COPY xaseco/addons/plugins/ plugins/
 # monthly log files in logs/ (a volume) instead of logfile.txt in the program directory
 RUN sed -i "s/define('MONTHLY_LOGSDIR', false);/define('MONTHLY_LOGSDIR', true);/" aseco.php \
  && grep -q "define('MONTHLY_LOGSDIR', true);" aseco.php \

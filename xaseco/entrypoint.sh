@@ -8,7 +8,10 @@ if [ -z "$TMF_MASTERADMIN_LOGIN" ]; then
 fi
 
 # Dedimania accepts a community code instead of the server password
+# (the other two are used by the track list saving and Records-Eyepiece's clock)
 export TMF_DEDIMANIA_PASSWORD="${TMF_DEDIMANIA_CODE:-$TMF_SERVER_PASSWORD}"
+export TMF_TRACKLIST="${TMF_MATCHSETTINGS#MatchSettings/}"
+export TMF_TZ="${TZ:-UTC}"
 
 # settings from config/xaseco with the ${TMF_...} values from .env filled in;
 # the *.php settings belong into includes/, everything else into the program directory
@@ -25,6 +28,9 @@ done
 if [ -z "$TMF_SERVER_LOGIN" ]; then
   echo "No server login configured: Dedimania plugins disabled"
   sed -i '/<plugin>plugin\.dedimania\.php<\/plugin>/d; /<plugin>chat\.dedimania\.php<\/plugin>/d' plugins.xml
+  # Records-Eyepiece refuses to start with Dedimania widgets but without the Dedimania plugin
+  perl -0 -pi -e 's{(<dedimania_records>.*?</dedimania_records>)}{ (my $b = $1) =~ s/<enabled>true</<enabled>false</g; $b }gse;
+                  s{<dedimania_records>true</dedimania_records>}{<dedimania_records>false</dedimania_records>}g' records_eyepiece.xml
 fi
 
 # files XAseco changes itself (admin lists, bans, jfreu settings) live in the data volume

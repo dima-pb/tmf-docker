@@ -42,6 +42,14 @@ container starts, so passwords are only kept in `.env`. After changing something
   `data/tmserver/tracks/MatchSettings/active.txt`. After that, edit that file (XAseco may write to it too)
 - `config/xaseco/*`: XAseco settings (`plugins.xml`, `config.xml`, ...). Note: XAseco can't read `<` or `>`
   in values, the container refuses to start with such a password
+- `config/xaseco/records_eyepiece.xml`: the record widgets (Dedimania left, local records right, ...) of
+  the Records-Eyepiece plugin, see `xaseco/addons/`. Without a server login its Dedimania widgets are disabled
+
+Maps are the server's business: they are in the match settings file
+(`data/tmserver/tracks/MatchSettings/active.txt`), restart `tmserver` after editing it.
+The time per map is handled by XAseco's Flexitime plugin (`config/xaseco/flexitime.xml`, default 60 minutes,
+admins change it in game with `/timeleft`), so the server's own `timeattack_limit` is 0 (off). XAseco only
+writes it on `/admin writetracklist` (it saves the current list, e.g. after `/admin add`).
 - `config/pyseco/`: pyseco settings and plugin settings (`plugins/discord.ini`)
 
 ## Data

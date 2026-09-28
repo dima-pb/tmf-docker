@@ -164,7 +164,7 @@
     <!-- 2 = in TMF message window, 1 = in chat, 0 = none -->
     <show_curtrack>0</show_curtrack>
 
-    <default_tracklist>tracklist.txt</default_tracklist>
+    <default_tracklist>${TMF_TRACKLIST}</default_tracklist>
     <writetracklist_random>True</writetracklist_random>
     <help_explanation>False</help_explanation>
     <lists_colornicks>True</lists_colornicks>

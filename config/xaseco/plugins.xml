@@ -41,4 +41,6 @@
 <!--	<plugin>plugin.access.php</plugin> -->
 	<plugin>jfreu.plugin.php</plugin>
 	<plugin>mistral.idlekick.php</plugin>
+	<plugin>plugin.records_eyepiece.php</plugin>
+	<plugin>plugin.flexitime.php</plugin>
 </aseco_plugins>

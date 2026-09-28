@@ -80,6 +80,7 @@ services:
       TMF_SERVER_PASSWORD: ${TMF_SERVER_PASSWORD}
       TMF_SERVER_NATION: ${TMF_SERVER_NATION}
       TMF_DEDIMANIA_CODE: ${TMF_DEDIMANIA_CODE:-}
+      TMF_MATCHSETTINGS: ${TMF_MATCHSETTINGS}
     volumes:
       - ./config/xaseco:/config:ro
       - ./data/xaseco/state:/data
