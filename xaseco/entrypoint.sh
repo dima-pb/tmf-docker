@@ -7,6 +7,9 @@ if [ -z "$TMF_MASTERADMIN_LOGIN" ]; then
   exit 1
 fi
 
+# Dedimania accepts a community code instead of the server password
+export TMF_DEDIMANIA_PASSWORD="${TMF_DEDIMANIA_CODE:-$TMF_SERVER_PASSWORD}"
+
 # settings from config/xaseco with the ${TMF_...} values from .env filled in;
 # the *.php settings belong into includes/, everything else into the program directory
 for f in /config/*; do

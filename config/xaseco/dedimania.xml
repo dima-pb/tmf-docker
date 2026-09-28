@@ -40,7 +40,8 @@
 	<!-- http://en.wikipedia.org/wiki/List_of_IOC_country_codes       -->
 	<masterserver_account>
 		<login>${TMF_SERVER_LOGIN}</login>
-		<password>${TMF_SERVER_PASSWORD}</password>
+		<!-- docker: TMF_DEDIMANIA_CODE from .env, or TMF_SERVER_PASSWORD if that is empty -->
+		<password>${TMF_DEDIMANIA_PASSWORD}</password>
 		<nation>${TMF_SERVER_NATION}</nation>
 	</masterserver_account>
 
