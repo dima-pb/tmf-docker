@@ -105,14 +105,13 @@ services:
     environment:
       TZ: ${TZ}
       TMF_SUPERADMIN_PASSWORD: ${TMF_SUPERADMIN_PASSWORD}
-      TMF_ADMIN_PASSWORD: ${TMF_ADMIN_PASSWORD}
-      TMF_USER_PASSWORD: ${TMF_USER_PASSWORD}
+      TMF_MASTERADMIN_LOGIN: ${TMF_MASTERADMIN_LOGIN}
       TMF_DISCORD_TOKEN: ${TMF_DISCORD_TOKEN}
       TMF_DISCORD_CHANNEL_ID: ${TMF_DISCORD_CHANNEL_ID}
       TMF_DISCORD_INVITE: ${TMF_DISCORD_INVITE}
-      TMF_DISCORD_ADMINS: ${TMF_DISCORD_ADMINS}
     volumes:
       - ./config/pyseco:/config:ro
-      - ./data/pyseco/logs:/data/logs
+      # database, logs and caches
+      - ./data/pyseco:/data
     depends_on:
       - tmserver

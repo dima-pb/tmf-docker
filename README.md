@@ -50,7 +50,9 @@ Maps are the server's business: they are in the match settings file
 The time per map is handled by XAseco's Flexitime plugin (`config/xaseco/flexitime.xml`, default 60 minutes,
 admins change it in game with `/timeleft`), so the server's own `timeattack_limit` is 0 (off). XAseco only
 writes it on `/admin writetracklist` (it saves the current list, e.g. after `/admin add`).
-- `config/pyseco/`: pyseco settings and plugin settings (`plugins/discord.ini`)
+- `config/pyseco/pyseco.toml`: pyseco settings, one section per plugin. Admins for pyseco commands:
+  the masteradmin (`TMF_MASTERADMIN_LOGIN`) gives roles in game with `/setrole`; discord accounts are
+  linked to TM logins with `/link` in game and `!link <code>` in discord
 
 ## Data
 Everything the services write lives in `data/` and belongs to your user (`UID`/`GID` in `.env`):
@@ -60,6 +62,7 @@ Everything the services write lives in `data/` and belongs to your user (`UID`/`
 - `data/mysql`: the database. Its passwords are set when it is created: changing `TMF_MYSQL_PASSWORD`
   later requires changing it in the database too (or starting with an empty `data/mysql`)
 - `data/xaseco/state`: admin/op lists, banned IPs, jfreu settings, written by XAseco
+- `data/pyseco`: pyseco's database (`pyseco.db`: players, roles, discord links, ...) and logs
 - `*/logs`: logs of every service
 
 Back up `data/` (for the database while it is stopped, or with `mariadb-dump`) and `.env`.

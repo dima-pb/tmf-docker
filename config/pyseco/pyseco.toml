@@ -1,0 +1,22 @@
+# pyseco settings, ${TMF_...} values come from .env. See pyseco.toml.example in pyseco for all options.
+
+[server]
+host = "tmserver"
+port = 5000
+login = "SuperAdmin"
+password = "${TMF_SUPERADMIN_PASSWORD}"
+
+[controller]
+# more roles are given in game: /setrole <login> <player|operator|admin>
+masteradmins = ["${TMF_MASTERADMIN_LOGIN}"]
+# available: ad, custom_votes, discord, echo
+# (custom_votes and ad overlap with XAseco, so only discord runs next to it)
+plugins = ["discord"]
+data_dir = "/data"
+log_level = "info"
+
+[discord]
+token = "${TMF_DISCORD_TOKEN}"
+channel_id = ${TMF_DISCORD_CHANNEL_ID}
+invite = "${TMF_DISCORD_INVITE}"
+prefix = "!"
