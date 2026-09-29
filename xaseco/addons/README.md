@@ -7,4 +7,5 @@ and they are enabled in `config/xaseco/plugins.xml`.
 | Plugin | Version | Source | License |
 |---|---|---|---|
 | Records-Eyepiece (`plugin.records_eyepiece.php`) | 1.1.1 | https://www.undef.name/XAseco1/Records-Eyepiece.php | GPLv3 (`licenses/records-eyepiece-COPYING.txt`) |
+| pyseco jukebox bridge (`plugin.rasp_jukebox.php`) | - | this repo, replaces RASP's jukebox: the jukebox is pyseco's | GPL like XAseco |
 | Flexitime (`plugin.flexitime.php`) | git 9d2f895 (2019) | https://github.com/realh/flexitime | MIT (`licenses/flexitime-LICENSE.txt`) |

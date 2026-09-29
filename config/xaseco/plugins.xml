@@ -23,12 +23,12 @@
 	<plugin>plugin.checkpoints.php</plugin>
 	<plugin>plugin.dedimania.php</plugin>
 	<plugin>plugin.rasp.php</plugin>
+	<!-- docker: the jukebox is pyseco's, this is the bridge from xaseco/addons (rasp_votes and rasp_nextmap
+	     are replaced by pyseco too: /skip, /replay, /nextmap) -->
 	<plugin>plugin.rasp_jukebox.php</plugin>
 	<plugin>plugin.rasp_chat.php</plugin>
 	<plugin>plugin.rasp_karma.php</plugin>
-	<plugin>plugin.rasp_nextmap.php</plugin>
 	<plugin>plugin.rasp_nextrank.php</plugin>
-	<plugin>plugin.rasp_votes.php</plugin>
 	<plugin>plugin.chatlog.php</plugin>
 <!--	<plugin>plugin.msglog.php</plugin> -->
 	<plugin>plugin.style.php</plugin>
