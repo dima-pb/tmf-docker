@@ -9,7 +9,7 @@ if [ -z "$TMF_HTTP_URL" ] && [ -n "$TMF_PUBLIC_IP" ]; then
 fi
 
 # the plugins: TMF_PLUGINS, plus discord and dedimania when they can work
-plugins="${TMF_PLUGINS:-welcome flexitime local_records tmx jukebox custom_votes admin_panel}"
+plugins="${TMF_PLUGINS:-welcome flexitime local_records tmx jukebox custom_votes admin_panel karma}"
 if [ -n "$TMF_DISCORD_TOKEN" ]; then plugins="$plugins discord"; fi
 if [ -n "$TMF_SERVER_LOGIN" ] && [ -n "$TMF_DEDIMANIA_CODE" ]; then plugins="$plugins dedimania"; fi
 list=$(printf '"%s", ' $plugins)
