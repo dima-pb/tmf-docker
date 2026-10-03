@@ -3,18 +3,18 @@ set -e
 cd /opt/tmserver
 TRACKS=GameData/Tracks
 
-# first start: default tracks and the match settings from config/
-# (a marker file, because the server itself creates empty directories like Campaigns/)
-if [ ! -f "$TRACKS/.defaults-copied" ]; then
-  echo "First start: copying default tracks"
-  cp -r /opt/defaults/Tracks/. "$TRACKS/"
-  touch "$TRACKS/.defaults-copied"
-fi
+# default tracks: on every start the missing ones are copied, nothing that exists is overwritten
+# (so a default track that got deleted comes back)
+cp -rn /opt/defaults/Tracks/. "$TRACKS/"
 if [ ! -f "$TRACKS/$TMF_MATCHSETTINGS" ]; then
   echo "Creating $TMF_MATCHSETTINGS from config/tmserver/matchsettings.txt"
   mkdir -p "$(dirname "$TRACKS/$TMF_MATCHSETTINGS")"
   cp /config/matchsettings.txt "$TRACKS/$TMF_MATCHSETTINGS"
 fi
+# maps the match settings list but that don't exist; the server only says it can't load them
+sed -n 's:.*<file>\(.*\)</file>.*:\1:p' "$TRACKS/$TMF_MATCHSETTINGS" | tr '\\' '/' | tr -d '\r' | while IFS= read -r map; do
+  [ -f "$TRACKS/$map" ] || echo "WARNING: $TMF_MATCHSETTINGS lists $map, which does not exist in data/tmserver/tracks"
+done
 
 render.sh --xml /config/dedicated_cfg.txt GameData/Config/dedicated_cfg.txt
 

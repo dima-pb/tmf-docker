@@ -56,8 +56,10 @@ Discord accounts are linked to TM logins with `/link` in game and `!link <code>`
 ## Data
 Everything the services write lives in `data/` and belongs to your user (`UID`/`GID` in `.env`):
 
-- `data/tmserver/tracks`: tracks, match settings, replays (filled with the default tracks on the first start);
-  maps from TMX are in `Challenges/TMX`
+- `data/tmserver/tracks`: tracks, match settings, replays; default tracks that are missing (e.g. deleted) are
+  copied from the server download on every start, nothing existing is overwritten. Maps from TMX are in
+  `Challenges/TMX`. Maps listed in the match settings that don't exist are reported in `docker compose logs tmserver`
+  (the server does not start when it can't load any)
 - `data/tmserver/config`: files the server writes (blacklist, guestlist)
 - `data/pyseco`: pyseco's database (`pyseco.db`: players, roles, records, bans, ...) and logs
 - `*/logs`: logs of every service
