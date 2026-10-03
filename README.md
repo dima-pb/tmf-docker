@@ -30,7 +30,9 @@ docker compose logs -f   # watch everything start
 
 Without `TMF_SERVER_LOGIN` the server runs as a LAN server and Dedimania is off.
 For an internet server fill in the server account (and `TMF_PUBLIC_IP` if the host is behind NAT)
-and forward `TMF_PORT` and `TMF_P2P_PORT` (TCP and UDP) to the host.
+and forward `TMF_PORT` and `TMF_P2P_PORT` (TCP and UDP) to the host. pyseco serves images for its widgets (e.g. the
+Discord logo) on `TMF_HTTP_PORT` (TCP, default 8080): open it too, the players' games load them from
+`http://TMF_PUBLIC_IP:TMF_HTTP_PORT`. Without a public address the widgets show text instead.
 
 ## Configuration
 Files in `config/` are templates: every `${TMF_...}` is replaced with the value from `.env` when a

@@ -64,6 +64,12 @@ services:
       TMF_DISCORD_TOKEN: ${TMF_DISCORD_TOKEN}
       TMF_DISCORD_CHANNEL_ID: ${TMF_DISCORD_CHANNEL_ID}
       TMF_DISCORD_INVITE: ${TMF_DISCORD_INVITE}
+      TMF_PUBLIC_IP: ${TMF_PUBLIC_IP}
+      TMF_HTTP_PORT: ${TMF_HTTP_PORT:-8080}
+      TMF_HTTP_URL: ${TMF_HTTP_URL:-}
+    # images for widgets (e.g. the Discord logo), loaded by the players' games; pyseco listens on 8080 inside
+    ports:
+      - "${TMF_HTTP_PORT:-8080}:8080/tcp"
     volumes:
       - ./config/pyseco:/config:ro
       # database and logs; maps from TMX go to the server through XML-RPC (WriteFile), no shared tracks volume

@@ -15,6 +15,11 @@ plugins = [@PLUGINS@]
 data_dir = "/data"
 log_level = "info"
 
+[http]
+# images for widgets (the Discord logo, ...): the players' games load them from this web server
+port = 8080
+url = "${TMF_HTTP_URL}"
+
 [maps]
 # changes of the map list (/admin remove, /addthis) are saved in the server's match settings
 matchsettings = "${TMF_MATCHSETTINGS}"
