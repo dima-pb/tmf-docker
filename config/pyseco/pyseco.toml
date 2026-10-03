@@ -64,6 +64,9 @@ token = "${TMF_DISCORD_TOKEN}"
 channel_id = ${TMF_DISCORD_CHANNEL_ID}
 invite = "${TMF_DISCORD_INVITE}"
 prefix = "!"
+# new local / Dedimania records up to this rank are posted in the channel (0: none)
+local_records = 0
+dedimania = 30
 
 # Widgets can be moved: [widgets.<name>] with x (-64 left .. 64 right) and y (48 top .. -48 bottom) of the top
 # left corner. Names: flexitime, local_records, dedimania, tmx, admin_panel
