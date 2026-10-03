@@ -1,21 +1,21 @@
 # tmf-docker
 
-TrackMania Forever dedicated server with XAseco and pyseco, each in its own container:
+TrackMania Forever dedicated server with the pyseco controller, each in its own container:
 
-| Service    | Image                          | Purpose                                              |
-|------------|--------------------------------|------------------------------------------------------|
-| `tmserver` | Debian + TM server 2011-02-21 | the game server (with the tie-break fix by default)  |
-| `mysql`    | MariaDB 11.4                   | XAseco's database, only reachable inside docker      |
-| `xaseco`   | PHP 5.6 + XAseco 1.16          | local records, Dedimania, votes, jukebox, ...        |
-| `pyseco`   | Python 3.14 + pyseco           | Discord bridge (and future replacements for XAseco)  |
+| Service    | Image                          | Purpose                                                          |
+|------------|--------------------------------|------------------------------------------------------------------|
+| `tmserver` | Debian + TM server 2011-02-21 | the game server (with the tie-break fix by default)              |
+| `pyseco`   | Python 3.14 + pyseco           | local records, Dedimania, TMX, jukebox, votes, moderation, Discord |
 
 You only deal with two things: **`.env`** (passwords, server account, ports) and the files in **`config/`**.
+
+The setup with XAseco (PHP 5.6, MariaDB, Records-Eyepiece) is kept as the git tag `xaseco-1.0` and the branch
+`xaseco`; it needs pyseco at its `xaseco-1.0` tag too.
 
 ## Requirements
 - Docker with the compose and buildx plugins (Manjaro/Arch: `docker docker-compose docker-buildx`)
 - The software itself, which is not part of this repo:
   - the TM dedicated server 2011-02-21 (unzipped download from Nadeo)
-  - XAseco 1.16
   - a pyseco checkout
 
   Their locations are set in `.env` (default: next to this repo). The images are built locally from
@@ -28,7 +28,7 @@ docker compose up -d --build
 docker compose logs -f   # watch everything start
 ```
 
-Without `TMF_SERVER_LOGIN` the server runs as a LAN server and Dedimania is disabled automatically.
+Without `TMF_SERVER_LOGIN` the server runs as a LAN server and Dedimania is off.
 For an internet server fill in the server account (and `TMF_PUBLIC_IP` if the host is behind NAT)
 and forward `TMF_PORT` and `TMF_P2P_PORT` (TCP and UDP) to the host.
 
@@ -39,37 +39,35 @@ container starts, so passwords are only kept in `.env`. After changing something
 
 - `config/tmserver/dedicated_cfg.txt`: server settings
 - `config/tmserver/matchsettings.txt`: only used on the first start to create
-  `data/tmserver/tracks/MatchSettings/active.txt`. After that, edit that file (XAseco may write to it too)
-- `config/xaseco/*`: XAseco settings (`plugins.xml`, `config.xml`, ...). Note: XAseco can't read `<` or `>`
-  in values, the container refuses to start with such a password
-- `config/xaseco/records_eyepiece.xml`: the record widgets (Dedimania left, local records right, ...) of
-  the Records-Eyepiece plugin, see `xaseco/addons/`. Without a server login its Dedimania widgets are disabled
+  `data/tmserver/tracks/MatchSettings/active.txt`. After that, edit that file
+- `config/pyseco/pyseco.toml`: pyseco settings, one section per plugin. The plugins are chosen with
+  `TMF_PLUGINS` in `.env`; `discord` is added when a bot token is set, `dedimania` when there is a server login
+  (with `TMF_DEDIMANIA_CODE`, or the server password)
 
 Maps are the server's business: they are in the match settings file
-(`data/tmserver/tracks/MatchSettings/active.txt`), restart `tmserver` after editing it.
-The time per map is handled by XAseco's Flexitime plugin (`config/xaseco/flexitime.xml`, default 60 minutes,
-admins change it in game with `/timeleft`), so the server's own `timeattack_limit` is 0 (off). XAseco only
-writes it on `/admin writetracklist` (it saves the current list, e.g. after `/admin add`).
-- `config/pyseco/pyseco.toml`: pyseco settings, one section per plugin. Admins for pyseco commands:
-  the masteradmin (`TMF_MASTERADMIN_LOGIN`) gives roles in game with `/setrole`; discord accounts are
-  linked to TM logins with `/link` in game and `!link <code>` in discord
+(`data/tmserver/tracks/MatchSettings/active.txt`), restart `tmserver` after editing it. Admins add maps from TMX in
+game for one play (`/add <id>`, `/rtmx`), `/addthis` keeps one until the server restarts.
+The time per map is kept by pyseco's flexitime plugin (default 60 minutes, admins change it with `/timeleft`), so
+the server's own `timeattack_limit` is 0 (off).
+
+Roles: the masteradmin (`TMF_MASTERADMIN_LOGIN`) gives roles in game with `/setrole`; `/pyseco` lists the commands.
+Discord accounts are linked to TM logins with `/link` in game and `!link <code>` in discord.
 
 ## Data
 Everything the services write lives in `data/` and belongs to your user (`UID`/`GID` in `.env`):
 
-- `data/tmserver/tracks`: tracks, match settings, replays (filled with the default tracks on the first start)
+- `data/tmserver/tracks`: tracks, match settings, replays (filled with the default tracks on the first start);
+  maps from TMX are in `Challenges/TMX`
 - `data/tmserver/config`: files the server writes (blacklist, guestlist)
-- `data/mysql`: the database. Its passwords are set when it is created: changing `TMF_MYSQL_PASSWORD`
-  later requires changing it in the database too (or starting with an empty `data/mysql`)
-- `data/xaseco/state`: admin/op lists, banned IPs, jfreu settings, written by XAseco
-- `data/pyseco`: pyseco's database (`pyseco.db`: players, roles, discord links, ...) and logs
+- `data/pyseco`: pyseco's database (`pyseco.db`: players, roles, records, bans, ...) and logs
 - `*/logs`: logs of every service
 
-Back up `data/` (for the database while it is stopped, or with `mariadb-dump`) and `.env`.
+Back up `data/` (`pyseco.db` while pyseco is stopped, or with `sqlite3 pyseco.db ".backup copy.db"`) and `.env`.
+
+Coming from the XAseco setup: `data/mysql` and `data/xaseco` are no longer used, local records from XAseco are not
+taken over.
 
 ## Notes
-- XAseco writes into the server's track directory and asks the server for its path, so the tracks
-  volume is mounted at the same path (`/opt/tmserver/GameData/Tracks`) in both containers.
 - The server's XML-RPC port 5000 is only reachable inside the docker network (`xmlrpc_allowremote`
   is on for that reason). Don't publish it.
 - The tie-break fix (players with equal times: the first to drive it ranks first) is applied while

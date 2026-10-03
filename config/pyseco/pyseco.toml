@@ -9,20 +9,44 @@ password = "${TMF_SUPERADMIN_PASSWORD}"
 [controller]
 # more roles are given in game: /setrole <login> <player|operator|admin>
 masteradmins = ["${TMF_MASTERADMIN_LOGIN}"]
-# available: ad, custom_votes, discord, echo, jukebox
-# (ad overlaps with XAseco; jukebox replaces XAseco's jukebox, custom_votes its /skip and /replay votes)
-plugins = ["discord", "jukebox", "custom_votes"]
+# filled in when the container starts: TMF_PLUGINS from .env, plus discord (with a token) and dedimania
+# (with a server login)
+plugins = [@PLUGINS@]
 data_dir = "/data"
 log_level = "info"
 
-[discord]
-token = "${TMF_DISCORD_TOKEN}"
-channel_id = ${TMF_DISCORD_CHANNEL_ID}
-invite = "${TMF_DISCORD_INVITE}"
-prefix = "!"
+[welcome]
+# "" switches a message off. Placeholders: {nickname} {login} {role} {visits} {visits_text} {server}
+message = "Welcome {nickname}$z$s to {server}$z$s! Type $fff/pyseco$z$s for the commands."
+join = "{nickname}$z$s joined the server ({visits_text})."
+leave = "{nickname}$z$s left the server."
+
+[flexitime]
+# time per map in minutes; admins change it in game with /timeleft (the server's own limit is switched off)
+minutes = 60
+
+[local_records]
+# records per map; new records up to <announce> are told to everybody (0: never); records in the widget
+max = 50
+announce = 30
+top = 5
+
+[dedimania]
+login = "${TMF_SERVER_LOGIN}"
+# TMF_DEDIMANIA_CODE, or the server password if it is empty
+code = "${TMF_DEDIMANIA_CODE}"
+nation = "${TMF_SERVER_NATION}"
+announce = 30
+top = 5
+
+[tmx]
+# TMX search filter for /rtmx (as in tmnf.exchange's track search); maps that need TMUnlimiter or mix
+# environments are always left out
+random = "primarytype=0"
+top = 5
 
 [jukebox]
-# players can't wish one of the last <recent> maps; entries per player at a time (operators and above: no limit)
+# players can't wish one of the last <recent> maps; wishes per player at a time (operators and above: no limit)
 recent = 10
 per_player = 1
 
@@ -30,3 +54,12 @@ per_player = 1
 # /skip and /replay votes: duration in ms, share of yes votes needed
 timeout = 30000
 ratio = 0.5
+
+[discord]
+token = "${TMF_DISCORD_TOKEN}"
+channel_id = ${TMF_DISCORD_CHANNEL_ID}
+invite = "${TMF_DISCORD_INVITE}"
+prefix = "!"
+
+# Widgets can be moved: [widgets.<name>] with x (-64 left .. 64 right) and y (48 top .. -48 bottom) of the top
+# left corner. Names: flexitime, local_records, dedimania, tmx

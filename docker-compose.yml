@@ -1,4 +1,4 @@
-# TrackMania Forever server with XAseco and pyseco. Settings: .env (copy from .env.example) and config/.
+# TrackMania Forever server with the pyseco controller. Settings: .env (copy from .env.example) and config/.
 name: tmf
 
 x-common: &common
@@ -42,58 +42,6 @@ services:
       - ./data/tmserver/tracks:/opt/tmserver/GameData/Tracks
       - ./data/tmserver/logs:/opt/tmserver/Logs
 
-  mysql:
-    <<: *common
-    image: mariadb:11.4
-    environment:
-      TZ: ${TZ}
-      MARIADB_DATABASE: aseco
-      MARIADB_USER: aseco
-      MARIADB_PASSWORD: ${TMF_MYSQL_PASSWORD}
-      MARIADB_ROOT_PASSWORD: ${TMF_MYSQL_ROOT_PASSWORD}
-    # XAseco's PHP 5.6 client only knows the classic utf8 collations, and its queries predate strict mode
-    command: --character-set-server=utf8mb3 --collation-server=utf8mb3_general_ci --sql-mode=
-    volumes:
-      - ./data/mysql:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      interval: 5s
-      timeout: 5s
-      retries: 30
-
-  xaseco:
-    <<: *common
-    build:
-      context: .
-      dockerfile: xaseco/Dockerfile
-      additional_contexts:
-        xaseco_src: ${XASECO_DIR}
-    image: tmf-xaseco:local
-    # PHP can't handle stop signals as the container's main process, a small init process passes them on
-    init: true
-    environment:
-      TZ: ${TZ}
-      TMF_MASTERADMIN_LOGIN: ${TMF_MASTERADMIN_LOGIN}
-      TMF_SUPERADMIN_PASSWORD: ${TMF_SUPERADMIN_PASSWORD}
-      TMF_MYSQL_PASSWORD: ${TMF_MYSQL_PASSWORD}
-      TMF_SERVER_LOGIN: ${TMF_SERVER_LOGIN}
-      TMF_SERVER_PASSWORD: ${TMF_SERVER_PASSWORD}
-      TMF_SERVER_NATION: ${TMF_SERVER_NATION}
-      TMF_DEDIMANIA_CODE: ${TMF_DEDIMANIA_CODE:-}
-      TMF_MATCHSETTINGS: ${TMF_MATCHSETTINGS}
-    volumes:
-      - ./config/xaseco:/config:ro
-      - ./data/xaseco/state:/data
-      - ./data/xaseco/logs:/opt/xaseco/logs
-      # XAseco writes into the server's track directory (TMX downloads, track lists) and gets its
-      # path from the server, so it must be mounted at exactly the same path as in tmserver
-      - ./data/tmserver/tracks:/opt/tmserver/GameData/Tracks
-    depends_on:
-      tmserver:
-        condition: service_started
-      mysql:
-        condition: service_healthy
-
   pyseco:
     <<: *common
     build:
@@ -106,12 +54,17 @@ services:
       TZ: ${TZ}
       TMF_SUPERADMIN_PASSWORD: ${TMF_SUPERADMIN_PASSWORD}
       TMF_MASTERADMIN_LOGIN: ${TMF_MASTERADMIN_LOGIN}
+      TMF_PLUGINS: ${TMF_PLUGINS:-}
+      TMF_SERVER_LOGIN: ${TMF_SERVER_LOGIN}
+      TMF_SERVER_PASSWORD: ${TMF_SERVER_PASSWORD}
+      TMF_SERVER_NATION: ${TMF_SERVER_NATION}
+      TMF_DEDIMANIA_CODE: ${TMF_DEDIMANIA_CODE:-}
       TMF_DISCORD_TOKEN: ${TMF_DISCORD_TOKEN}
       TMF_DISCORD_CHANNEL_ID: ${TMF_DISCORD_CHANNEL_ID}
       TMF_DISCORD_INVITE: ${TMF_DISCORD_INVITE}
     volumes:
       - ./config/pyseco:/config:ro
-      # database, logs and caches
+      # database and logs; maps from TMX go to the server through XML-RPC (WriteFile), no shared tracks volume
       - ./data/pyseco:/data
     depends_on:
       - tmserver
