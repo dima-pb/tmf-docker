@@ -63,6 +63,8 @@ ratio = 0.5
 token = "${TMF_DISCORD_TOKEN}"
 channel_id = ${TMF_DISCORD_CHANNEL_ID}
 invite = "${TMF_DISCORD_INVITE}"
+# with an invite link: a small button in game that opens it
+button = true
 prefix = "!"
 # new local / Dedimania records up to this rank are posted in the channel (0: none)
 local_records = 0
