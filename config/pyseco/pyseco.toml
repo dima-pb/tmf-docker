@@ -15,6 +15,10 @@ plugins = [@PLUGINS@]
 data_dir = "/data"
 log_level = "info"
 
+[maps]
+# changes of the map list (/admin remove, /addthis) are saved in the server's match settings
+matchsettings = "${TMF_MATCHSETTINGS}"
+
 [welcome]
 # "" switches a message off. Placeholders: {nickname} {login} {role} {visits} {visits_text} {server}
 message = "Welcome {nickname}$z$s to {server}$z$s! Type $fff/pyseco$z$s for the commands."
@@ -62,4 +66,4 @@ invite = "${TMF_DISCORD_INVITE}"
 prefix = "!"
 
 # Widgets can be moved: [widgets.<name>] with x (-64 left .. 64 right) and y (48 top .. -48 bottom) of the top
-# left corner. Names: flexitime, local_records, dedimania, tmx
+# left corner. Names: flexitime, local_records, dedimania, tmx, admin_panel
