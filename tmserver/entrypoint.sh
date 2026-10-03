@@ -11,10 +11,23 @@ if [ ! -f "$TRACKS/$TMF_MATCHSETTINGS" ]; then
   mkdir -p "$(dirname "$TRACKS/$TMF_MATCHSETTINGS")"
   cp /config/matchsettings.txt "$TRACKS/$TMF_MATCHSETTINGS"
 fi
+# the maps of the match settings, as paths below the tracks directory
+maps=$(sed -n 's:.*<file>\(.*\)</file>.*:\1:p' "$TRACKS/$TMF_MATCHSETTINGS" | tr '\\' '/' | tr -d '\r')
 # maps the match settings list but that don't exist; the server only says it can't load them
-sed -n 's:.*<file>\(.*\)</file>.*:\1:p' "$TRACKS/$TMF_MATCHSETTINGS" | tr '\\' '/' | tr -d '\r' | while IFS= read -r map; do
-  [ -f "$TRACKS/$map" ] || echo "WARNING: $TMF_MATCHSETTINGS lists $map, which does not exist in data/tmserver/tracks"
+printf '%s\n' "$maps" | while IFS= read -r map; do
+  [ -z "$map" ] || [ -f "$TRACKS/$map" ] || echo "WARNING: $TMF_MATCHSETTINGS lists $map, which does not exist in data/tmserver/tracks"
 done
+# maps from TMX (pyseco's /add, /rtmx) that are not in the match settings were for one play: their files go
+# (/addthis saves a map in the match settings, it stays)
+if [ "${TMF_CLEAN_TMX:-1}" = 1 ]; then
+  for file in "$TRACKS"/Challenges/TMX/*; do
+    [ -f "$file" ] || continue
+    if ! printf '%s\n' "$maps" | grep -qixF "${file#"$TRACKS"/}"; then
+      echo "Removing ${file#"$TRACKS"/} (a TMX map that is not in $TMF_MATCHSETTINGS)"
+      rm -f "$file"
+    fi
+  done
+fi
 
 render.sh --xml /config/dedicated_cfg.txt GameData/Config/dedicated_cfg.txt
 

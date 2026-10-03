@@ -16,8 +16,9 @@ FROM debian:bookworm-slim
 WORKDIR /opt/tmserver
 COPY --from=binary --chmod=755 /build/server TrackmaniaServer
 COPY --from=tmserver_src GameData/DedicatedTrackMania.TrackMania.gbx GameData/NationsList.xml GameData/
-# default tracks, copied into the (initially empty) tracks volume on the first start
+# default tracks, missing ones are copied into the tracks volume on every start; maps from TMX are no defaults
 COPY --from=tmserver_src GameData/Tracks /opt/defaults/Tracks
+RUN rm -rf /opt/defaults/Tracks/Challenges/TMX
 COPY scripts/render.sh tmserver/entrypoint.sh /usr/local/bin/
 # the server runs as the host user (see compose) and writes temporary files and its cache into GameData
 RUN mkdir -p GameData/Cache GameData/Config GameData/Tracks Logs && chmod 777 GameData GameData/Cache
