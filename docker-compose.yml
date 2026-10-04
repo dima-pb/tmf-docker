@@ -13,8 +13,6 @@ services:
       dockerfile: tmserver/Dockerfile
       additional_contexts:
         tmserver_src: ${TMSERVER_DIR}
-      args:
-        TMF_TIEBREAK_PATCH: ${TMF_TIEBREAK_PATCH:-1}
     image: tmf-tmserver:local
     environment:
       TZ: ${TZ}

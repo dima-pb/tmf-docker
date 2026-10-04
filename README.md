@@ -4,7 +4,7 @@ TrackMania Forever dedicated server with the pyseco controller, each in its own 
 
 | Service    | Image                          | Purpose                                                          |
 |------------|--------------------------------|------------------------------------------------------------------|
-| `tmserver` | Debian + TM server 2011-02-21 | the game server (with the tie-break fix by default)              |
+| `tmserver` | Debian + TM server 2011-02-21 | the game server                                                  |
 | `pyseco`   | Python 3.14 + pyseco           | local records, Dedimania, TMX, jukebox, votes, moderation, Discord |
 
 You only deal with two things: **`.env`** (passwords, server account, ports) and the files in **`config/`**.
@@ -77,7 +77,5 @@ taken over.
 ## Notes
 - The server's XML-RPC port 5000 is only reachable inside the docker network (`xmlrpc_allowremote`
   is on for that reason). Don't publish it.
-- The tie-break fix (players with equal times: the first to drive it ranks first) is applied while
-  building the image. `TMF_TIEBREAK_PATCH=0` builds the original server.
 - Several servers: one copy of this directory per server, with different ports and `name:` in
   `docker-compose.yml` (or `COMPOSE_PROJECT_NAME` in `.env`).
