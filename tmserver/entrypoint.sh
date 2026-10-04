@@ -18,7 +18,7 @@ printf '%s\n' "$maps" | while IFS= read -r map; do
   [ -z "$map" ] || [ -f "$TRACKS/$map" ] || echo "WARNING: $TMF_MATCHSETTINGS lists $map, which does not exist in data/tmserver/tracks"
 done
 # maps from TMX (pyseco's /add, /rtmx) that are not in the match settings were for one play: their files go
-# (/addthis saves a map in the match settings, it stays)
+# (/admin keep saves a map in the match settings, it stays)
 if [ "${TMF_CLEAN_TMX:-1}" = 1 ]; then
   for file in "$TRACKS"/Challenges/TMX/*; do
     [ -f "$file" ] || continue

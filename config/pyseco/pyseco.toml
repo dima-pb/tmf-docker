@@ -21,7 +21,7 @@ port = 8080
 url = "${TMF_HTTP_URL}"
 
 [maps]
-# changes of the map list (/admin remove, /addthis) are saved in the server's match settings
+# changes of the map list (/admin remove, /admin keep) are saved in the server's match settings
 matchsettings = "${TMF_MATCHSETTINGS}"
 
 [welcome]

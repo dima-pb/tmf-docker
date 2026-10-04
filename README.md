@@ -48,7 +48,7 @@ container starts, so passwords are only kept in `.env`. After changing something
 
 Maps are the server's business: they are in the match settings file
 (`data/tmserver/tracks/MatchSettings/active.txt`), restart `tmserver` after editing it. Admins add maps from TMX in
-game for one play (`/add <id>`, `/rtmx`), `/addthis` keeps one; `/admin remove` takes a map off the list (the file
+game for one play (`/add <id>`, `/rtmx`), `/admin keep` keeps one; `/admin remove` takes a map off the list (the file
 stays). pyseco saves such changes in the match settings file. The `admin_panel` plugin shows buttons for next map,
 replay, restart and remove to operators and admins.
 The time per map is kept by pyseco's flexitime plugin (default 60 minutes, admins change it with `/timeleft`), so
