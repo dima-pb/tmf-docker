@@ -7,7 +7,7 @@ login = "SuperAdmin"
 password = "${TMF_SUPERADMIN_PASSWORD}"
 
 [controller]
-# more roles are given in game: /setrole <login> <player|operator|admin>
+# more roles are given in game: /admin setrole <login> <player|operator|admin>
 masteradmins = ["${TMF_MASTERADMIN_LOGIN}"]
 # filled in when the container starts: TMF_PLUGINS from .env, plus discord (with a token) and dedimania
 # (with a server login)
@@ -49,7 +49,7 @@ announce = 30
 top = 5
 
 [tmx]
-# TMX search filter for /rtmx (as in tmnf.exchange's track search); maps that need TMUnlimiter or mix
+# TMX search filter for /admin rtmx (as in tmnf.exchange's track search); maps that need TMUnlimiter or mix
 # environments are always left out
 random = "primarytype=0"
 top = 5

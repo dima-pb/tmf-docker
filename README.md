@@ -48,13 +48,13 @@ container starts, so passwords are only kept in `.env`. After changing something
 
 Maps are the server's business: they are in the match settings file
 (`data/tmserver/tracks/MatchSettings/active.txt`), restart `tmserver` after editing it. Admins add maps from TMX in
-game for one play (`/add <id>`, `/rtmx`), `/admin keep` keeps one; `/admin remove` takes a map off the list (the file
+game for one play (`/admin add <id>`, `/admin rtmx`), `/admin keep` keeps one; `/admin remove` takes a map off the list (the file
 stays). pyseco saves such changes in the match settings file. The `admin_panel` plugin shows buttons for next map,
 replay, restart and remove to operators and admins.
 The time per map is kept by pyseco's flexitime plugin (default 60 minutes, admins change it with `/timeleft`), so
 the server's own `timeattack_limit` is 0 (off).
 
-Roles: the masteradmin (`TMF_MASTERADMIN_LOGIN`) gives roles in game with `/setrole`; `/pyseco` lists the commands.
+Roles: the masteradmin (`TMF_MASTERADMIN_LOGIN`) gives roles in game with `/admin setrole`; `/pyseco` lists the commands.
 Discord accounts are linked to TM logins with `/link` in game and `!link <code>` in discord.
 
 ## Data
