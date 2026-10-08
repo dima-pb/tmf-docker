@@ -34,6 +34,11 @@ leave = "{nickname}$z$s left the server."
 # time per map in minutes; admins change it in game with /timeleft (the server's own limit is switched off)
 minutes = 60
 
+[session]
+# best runs of the session in the bar at the top; lines of the best checkpoints widget
+runs = 7
+checkpoints = 6
+
 [local_records]
 # records per map; new records up to <announce> are told to everybody (0: never); records in the widget
 max = 50
@@ -76,4 +81,5 @@ local_records = 0
 dedimania = 30
 
 # Widgets can be moved: [widgets.<name>] with x (-64 left .. 64 right) and y (48 top .. -48 bottom) of the top
-# left corner. Names: flexitime, local_records, dedimania, tmx, admin_panel, karma, discord
+# left corner. Names: flexitime, local_records, dedimania, tmx, admin_panel, karma, discord, menu, session,
+# checkpoint_diff, best_checkpoints
