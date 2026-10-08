@@ -34,6 +34,14 @@ leave = "{nickname}$z$s left the server."
 # time per map in minutes; admins change it in game with /timeleft (the server's own limit is switched off)
 minutes = 60
 
+[shop]
+# prices in coppers (the shop plugin); replays and restarts get <step> dearer with every one bought on a map
+replay = 250
+restart = 250
+step = 250
+skip = 1000
+add = 500
+
 [session]
 # best runs of the session in the bar at the top; lines of the best checkpoints widget
 runs = 7

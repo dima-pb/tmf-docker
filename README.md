@@ -44,7 +44,8 @@ container starts, so passwords are only kept in `.env`. After changing something
   `data/tmserver/tracks/MatchSettings/active.txt`. After that, edit that file
 - `config/pyseco/pyseco.toml`: pyseco settings, one section per plugin. The plugins are chosen with
   `TMF_PLUGINS` in `.env`; `discord` is added when a bot token is set, `dedimania` when there is a server login
-  (with `TMF_DEDIMANIA_CODE`, or the server password)
+  (with `TMF_DEDIMANIA_CODE`, or the server password), `shop` unless `TMF_COPPERS=0` (coppers need a TrackMania
+  United server account: set it to 0 on TMNF-only servers; without coppers the shop stays out of the menu anyway)
 
 Maps are the server's business: they are in the match settings file
 (`data/tmserver/tracks/MatchSettings/active.txt`), restart `tmserver` after editing it. Admins add maps from TMX in

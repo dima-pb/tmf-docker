@@ -8,8 +8,9 @@ if [ -z "$TMF_HTTP_URL" ] && [ -n "$TMF_PUBLIC_IP" ]; then
   export TMF_HTTP_URL="http://$TMF_PUBLIC_IP:${TMF_HTTP_PORT:-8080}"
 fi
 
-# the plugins: TMF_PLUGINS, plus discord and dedimania when they can work
+# the plugins: TMF_PLUGINS, plus shop, discord and dedimania when they can work
 plugins="${TMF_PLUGINS:-welcome flexitime local_records session tmx jukebox custom_votes admin_panel karma}"
+if [ "${TMF_COPPERS:-1}" != "0" ]; then plugins="$plugins shop"; fi
 if [ -n "$TMF_DISCORD_TOKEN" ]; then plugins="$plugins discord"; fi
 if [ -n "$TMF_SERVER_LOGIN" ] && [ -n "$TMF_DEDIMANIA_CODE" ]; then plugins="$plugins dedimania"; fi
 list=$(printf '"%s", ' $plugins)
