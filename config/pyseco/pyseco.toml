@@ -42,6 +42,14 @@ step = 250
 skip = 1000
 add = 500
 
+[wheel]
+# the wheel of fortune (with the shop): coppers per spin, the jackpot after it was won, coppers of every "nothing"
+# that go into the jackpot, double or nothing up to this win
+price = 50
+jackpot = 500
+feed = 20
+double_max = 1000
+
 [session]
 # best runs of the session in the bar at the top; lines of the best checkpoints widget
 runs = 7
