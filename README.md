@@ -55,7 +55,9 @@ replay, restart and remove to operators and admins.
 The time per map is kept by pyseco's flexitime plugin (default 60 minutes, admins change it with `/timeleft`), so
 the server's own `timeattack_limit` is 0 (off).
 
-Roles: the masteradmin (`TMF_MASTERADMIN_LOGIN`) gives roles in game with `/admin setrole`; `/pyseco` lists the commands.
+Roles: the masteradmin (`TMF_MASTERADMIN_LOGIN`) and everybody with a role give roles in game with `/admin setrole`
+(up to their own); server name, comment, passwords and the Discord invite are set in game with `/admin name` etc. and
+kept by pyseco over restarts. `/pyseco` lists the commands.
 Discord accounts are linked to TM logins with `/link` in game and `!link <code>` in discord.
 
 ## Data

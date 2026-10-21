@@ -7,7 +7,7 @@ login = "SuperAdmin"
 password = "${TMF_SUPERADMIN_PASSWORD}"
 
 [controller]
-# more roles are given in game: /admin setrole <login> <player|operator|admin>
+# more roles are given in game: /admin setrole <login> <player|operator|admin|masteradmin>
 masteradmins = ["${TMF_MASTERADMIN_LOGIN}"]
 # filled in when the container starts: TMF_PLUGINS from .env, plus discord (with a token) and dedimania
 # (with a server login)
