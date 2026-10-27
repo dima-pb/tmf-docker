@@ -9,7 +9,7 @@ if [ -z "$TMF_HTTP_URL" ] && [ -n "$TMF_PUBLIC_IP" ]; then
 fi
 
 # the plugins: TMF_PLUGINS, plus shop and wheel, discord and dedimania when they can work
-plugins="${TMF_PLUGINS:-welcome flexitime local_records session tmx jukebox custom_votes admin_panel karma}"
+plugins="${TMF_PLUGINS:-welcome flexitime local_records session tmx jukebox custom_votes admin_panel karma cup}"
 if [ "${TMF_COPPERS:-1}" != "0" ]; then plugins="$plugins shop wheel"; fi
 if [ -n "$TMF_DISCORD_TOKEN" ]; then plugins="$plugins discord"; fi
 if [ -n "$TMF_SERVER_LOGIN" ] && [ -n "$TMF_DEDIMANIA_CODE" ]; then plugins="$plugins dedimania"; fi

@@ -42,6 +42,15 @@ step = 250
 skip = 1000
 add = 500
 
+[cup]
+# the cup on command (/admin cup start; admins change these in game too): rounds per map, warm-up rounds, seconds left
+# after the first finish, finalists, points to reach the final
+rounds = 3
+warmup = 0
+finish_timeout = 45
+winners = 3
+points_limit = 250
+
 [wheel]
 # the wheel of fortune (with the shop): coppers per spin, the jackpot after it was won, coppers of every "nothing"
 # that go into the jackpot, double or nothing up to this win
